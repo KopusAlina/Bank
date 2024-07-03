@@ -1,24 +1,29 @@
 public class Bank {
     static int money = 7000;
+    private Object lock = new Object();
 
     static public int getMoney() {
         return money;
     }
 
-    static synchronized void take(int money) {
-        Bank.money -= money;
+    void take(int money) {
+        synchronized (lock) {
+            Bank.money -= money;
+        }
     }
 
-    static synchronized void replay(int money) {
-        Bank.money += money;
+    void replay(int money) {
+        synchronized (lock) {
+            Bank.money += money;
+        }
     }
 
     class Client extends Thread{
         @Override
                 public void run() {
             while (true) {
-                take(1000);
-                replay(1000);
+                take(500);
+                replay(500);
             }
         }
     }
